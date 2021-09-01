@@ -22,24 +22,6 @@ namespace Vehicles.Api.Controllers
             return View(await _context.VehicleTypes.ToListAsync());
         }
 
-        // GET: VehicleTypes/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var vehicleType = await _context.VehicleTypes
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (vehicleType == null)
-            {
-                return NotFound();
-            }
-
-            return View(vehicleType);
-        }
-
         // GET: VehicleTypes/Create
         public IActionResult Create()
         {
@@ -51,7 +33,7 @@ namespace Vehicles.Api.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Description")] VehicleType vehicleType)
+        public async Task<IActionResult> Create(VehicleType vehicleType)
         {
             if (ModelState.IsValid)
             {
@@ -83,7 +65,7 @@ namespace Vehicles.Api.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Description")] VehicleType vehicleType)
+        public async Task<IActionResult> Edit(int id, VehicleType vehicleType)
         {
             if (id != vehicleType.Id)
             {
@@ -128,23 +110,9 @@ namespace Vehicles.Api.Controllers
                 return NotFound();
             }
 
-            return View(vehicleType);
-        }
-
-        // POST: VehicleTypes/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var vehicleType = await _context.VehicleTypes.FindAsync(id);
             _context.VehicleTypes.Remove(vehicleType);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool VehicleTypeExists(int id)
-        {
-            return _context.VehicleTypes.Any(e => e.Id == id);
         }
     }
 }
