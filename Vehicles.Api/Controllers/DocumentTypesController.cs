@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 using Vehicles.Api.Data;
 using Vehicles.Api.Data.Entities;
 
-namespace Vehicles.API.Controllers
+namespace Vehicles.Api.Controllers
 {
-    [Authorize(Roles = "Admin")]
     public class DocumentTypesController : Controller
     {
         private readonly DataContext _context;

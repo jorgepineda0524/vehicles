@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Vehicles.Api.Data.Entities;
-using Vehicles.API.Data.Entities;
 
 namespace Vehicles.Api.Data
 {
@@ -17,6 +16,7 @@ namespace Vehicles.Api.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<DocumentType>().HasIndex(x => x.Description).IsUnique();
             modelBuilder.Entity<Procedure>().HasIndex(x => x.Description).IsUnique();
             modelBuilder.Entity<VehicleType>().HasIndex(x => x.Description).IsUnique();
         }
