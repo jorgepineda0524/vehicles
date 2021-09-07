@@ -1,24 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
 using Vehicles.Api.Data;
 using Vehicles.Api.Data.Entities;
 
-namespace Vehicles.Api.Controllers
+namespace Vehicles.API.Controllers
 {
-    public class ProceduresController : Controller
+    [Authorize(Roles = "Admin")]
+    public class DocumentTypesController : Controller
     {
         private readonly DataContext _context;
 
-        public ProceduresController(DataContext context)
+        public DocumentTypesController(DataContext context)
         {
             _context = context;
         }
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Procedures.ToListAsync());
+            return View(await _context.DocumentTypes.ToListAsync());
         }
 
         public IActionResult Create()
@@ -28,13 +30,13 @@ namespace Vehicles.Api.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Procedure procedure)
+        public async Task<IActionResult> Create(DocumentType documentType)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Add(procedure);
+                    _context.Add(documentType);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
@@ -42,58 +44,7 @@ namespace Vehicles.Api.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(String.Empty, "Ya existe este procedimiento.");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError(String.Empty, dbUpdateException.InnerException.Message);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError(String.Empty, ex.Message);
-                }
-            }
-            return View(procedure);
-        }
-
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            Procedure procedure = await _context.Procedures.FindAsync(id);
-            if (procedure == null)
-            {
-                return NotFound();
-            }
-            return View(procedure);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Procedure procedure)
-        {
-            if (id != procedure.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(procedure);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (DbUpdateException dbUpdateException)
-                {
-                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
-                    {
-                        ModelState.AddModelError(string.Empty, "Ya existe este procedimiento.");
+                        ModelState.AddModelError(string.Empty, "Ya existe este tipo de documento.");
                     }
                     else
                     {
@@ -105,7 +56,60 @@ namespace Vehicles.Api.Controllers
                     ModelState.AddModelError(string.Empty, exception.Message);
                 }
             }
-            return View(procedure);
+
+            return View(documentType);
+        }
+
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            DocumentType documentType = await _context.DocumentTypes.FindAsync(id);
+            if (documentType == null)
+            {
+                return NotFound();
+            }
+
+            return View(documentType);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, DocumentType documentType)
+        {
+            if (id != documentType.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(documentType);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateException dbUpdateException)
+                {
+                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                    {
+                        ModelState.AddModelError(string.Empty, "Ya existe este tipo de documento.");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    ModelState.AddModelError(string.Empty, exception.Message);
+                }
+            }
+            return View(documentType);
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -115,14 +119,14 @@ namespace Vehicles.Api.Controllers
                 return NotFound();
             }
 
-            Procedure procedure = await _context.Procedures
+            DocumentType documentType = await _context.DocumentTypes
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (procedure == null)
+            if (documentType == null)
             {
                 return NotFound();
             }
 
-            _context.Procedures.Remove(procedure);
+            _context.DocumentTypes.Remove(documentType);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

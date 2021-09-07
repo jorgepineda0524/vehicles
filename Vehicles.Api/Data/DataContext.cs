@@ -1,9 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Vehicles.Api.Data.Entities;
+using Vehicles.API.Data.Entities;
 
 namespace Vehicles.Api.Data
 {
@@ -13,6 +10,7 @@ namespace Vehicles.Api.Data
         {
         }
 
+        public DbSet<DocumentType> DocumentTypes { get; set; }
         public DbSet<Procedure> Procedures { get; set; }
         public DbSet<VehicleType> VehicleTypes { get; set; }
 
