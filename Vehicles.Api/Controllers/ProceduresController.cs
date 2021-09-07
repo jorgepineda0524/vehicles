@@ -64,7 +64,7 @@ namespace Vehicles.Api.Controllers
                 return NotFound();
             }
 
-            var vehicleType = await _context.VehicleTypes.FindAsync(id);
+            var vehicleType = await _context.Procedures.FindAsync(id);
             if (vehicleType == null)
             {
                 return NotFound();
